@@ -109,7 +109,7 @@ Remove-Item $agentZip;
 "Registering"
 # Register the agent in the environment
 "Calling .\config.cmd --unattended  --agent $agentName --runasservice --work '_work' --url $OrganizationUrl --auth PAT --token $Token --pool $Environment --replace --projectname $TeamProject --windowsLogonAccount $uid --windowsLogonPassword $pass"
-.\config.cmd --unattended  --agent $agentName --runasservice --work '_work' --url $OrganizationUrl --auth PAT --token $Token --pool $Environment --replace --projectname $TeamProject --windowsLogonAccount $uid --windowsLogonPassword $pass
+.\config.cmd --unattended  --agent $agentName --runasservice --work '_work' --url $OrganizationUrl --auth PAT --token $Token --pool $Environment --replace --projectname $TeamProject --windowsLogonAccount '$uid' --windowsLogonPassword '$pass'
 
 
 # Raise an exception if the registration of the agent failed
