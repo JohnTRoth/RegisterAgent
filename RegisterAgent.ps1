@@ -41,6 +41,7 @@ If($PSVersionTable.PSVersion -lt (New-Object System.Version("3.0")))
     throw "The minimum version of Windows PowerShell that is required by the script (3.0) does not match the currently running version of Windows PowerShell."
 };
 
+"Creating agent dir"
 If(-NOT (Test-Path $env:SystemDrive\'agent'))
 {
     mkdir $env:SystemDrive\'agent'
@@ -53,6 +54,7 @@ cd $env:SystemDrive\'agent';
 
 $agentZip="$PWD\agent.zip";
 
+"Donloading $agentZip"
 
 # Configure the web client used to download the zip file with the agent
 $DefaultProxy=[System.Net.WebRequest]::DefaultWebProxy;
@@ -77,7 +79,6 @@ $releases = $WebClient.DownloadString($releasesUrl) | ConvertFrom-Json
 $latestAgentRelease = $releases | Sort-Object -Property published_at -Descending | Select-Object -First 1
 $assetsUrl = $latestAgentRelease.assets[0].browser_download_url
 
-
 ## Get the agent download url from the agent release assets
 if($DefaultProxy -and (-not $DefaultProxy.IsBypassed($assetsUrl)))
 {
@@ -86,6 +87,7 @@ if($DefaultProxy -and (-not $DefaultProxy.IsBypassed($assetsUrl)))
 $assets = $WebClient.DownloadString($assetsUrl) | ConvertFrom-Json
 $Uri = $assets | Where-Object { $_.platform -eq "win-x64"} | Select-Object -First 1 | Select-Object -ExpandProperty downloadUrl
 
+"Downloading from $Uri"
 
 # Download the zip file with the agent
 if($DefaultProxy -and (-not $DefaultProxy.IsBypassed($Uri)))
@@ -95,15 +97,16 @@ if($DefaultProxy -and (-not $DefaultProxy.IsBypassed($Uri)))
 Write-Host "Download agent zip file from $Uri";
 $WebClient.DownloadFile($Uri, $agentZip);
 
-
+"Downloaded - Extracting $agentZip"
 # Extract the zip file
 Add-Type -AssemblyName System.IO.Compression.FileSystem;
 [System.IO.Compression.ZipFile]::ExtractToDirectory( $agentZip, "$PWD");
 
+"Removing zip"
 # Remove the zip file
 Remove-Item $agentZip;
 
-
+"Registering"
 # Register the agent in the environment
 .\config.cmd --unattended  --agent $agentName --runasservice --work '_work' --url $OrganizationUrl --auth PAT --token $Token --pool $Environment --replace --projectname $TeamProject --windowsLogonAccount $uid --windowsLogonPassword $pwd
 
@@ -113,3 +116,4 @@ if ($LastExitCode -ne 0)
 {
     throw "Error during registration. See '$PWD\_diag' for more information.";
 }
+"Completed!"
