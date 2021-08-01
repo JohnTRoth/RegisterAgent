@@ -25,7 +25,7 @@ param (
     [Parameter(Mandatory)][string]$Environment,
     [Parameter(Mandatory)][string]$Token,
     [Parameter(Mandatory)][string]$uid,
-    [Parameter(Mandatory)][string]$pwd,
+    [Parameter(Mandatory)][string]$pass,
     [string]$Tags
 )
 
@@ -108,7 +108,7 @@ Remove-Item $agentZip;
 
 "Registering"
 # Register the agent in the environment
-.\config.cmd --unattended  --agent $agentName --runasservice --work '_work' --url $OrganizationUrl --auth PAT --token $Token --pool $Environment --replace --projectname $TeamProject --windowsLogonAccount $uid --windowsLogonPassword $pwd
+.\config.cmd --unattended  --agent $agentName --runasservice --work '_work' --url $OrganizationUrl --auth PAT --token $Token --pool $Environment --replace --projectname $TeamProject --windowsLogonAccount $uid --windowsLogonPassword $pass
 
 
 # Raise an exception if the registration of the agent failed
