@@ -45,7 +45,16 @@ If($PSVersionTable.PSVersion -lt (New-Object System.Version("3.0")))
 If(-NOT (Test-Path $env:SystemDrive\'agent'))
 {
     mkdir $env:SystemDrive\'agent'
-};
+} else {
+    cd $env:SystemDrive\'agent';
+    "Removing previous agent"
+    # Remove previous (template) installation
+    "Calling .\config.cmd remove --unattended --auth PAT --token $Token"
+    .\config.cmd remove --unattended --auth PAT --token $Token
+    cd $env:SystemDrive\
+    Remove-Item $env:SystemDrive\'agent' -force -recurse
+    mkdir $env:SystemDrive\'agent'
+}
 
 
 $agentName = $env:COMPUTERNAME;
@@ -100,16 +109,11 @@ $WebClient.DownloadFile($Uri, $agentZip);
 "Downloaded - Extracting $agentZip"
 # Extract the zip file
 Add-Type -AssemblyName System.IO.Compression.FileSystem;
-[System.IO.Compression.ZipFile]::ExtractToDirectory( $agentZip, "$PWD", $true);
+[System.IO.Compression.ZipFile]::ExtractToDirectory( $agentZip, "$PWD");
 
 "Removing zip"
 # Remove the zip file
 Remove-Item $agentZip;
-
-"Removing previous agent"
-# Remove previous (template) installation
-"Calling .\config.cmd remove --unattended --auth PAT --token $Token"
-.\config.cmd remove --unattended --auth PAT --token $Token
 
 "Registering"
 # Register the agent in the environment
