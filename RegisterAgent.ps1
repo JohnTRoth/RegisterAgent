@@ -106,6 +106,11 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem;
 # Remove the zip file
 Remove-Item $agentZip;
 
+"Removing previous agent"
+# Remove previous (template) installation
+"Calling .\config.cmd remove --unattended --auth PAT --token $Token"
+.\config.cmd remove --unattended --auth PAT --token $Token
+
 "Registering"
 # Register the agent in the environment
 "Calling .\config.cmd --unattended  --agent $agentName --runasservice --work '_work' --url $OrganizationUrl --auth PAT --token $Token --pool $Environment --replace --projectname $TeamProject --windowsLogonAccount $uid --windowsLogonPassword $pass"
