@@ -100,7 +100,7 @@ $WebClient.DownloadFile($Uri, $agentZip);
 "Downloaded - Extracting $agentZip"
 # Extract the zip file
 Add-Type -AssemblyName System.IO.Compression.FileSystem;
-[System.IO.Compression.ZipFile]::ExtractToDirectory( $agentZip, "$PWD",1);
+[System.IO.Compression.ZipFile]::ExtractToDirectory( $agentZip, "$PWD", $true);
 
 "Removing zip"
 # Remove the zip file
