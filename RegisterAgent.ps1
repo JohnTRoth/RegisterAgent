@@ -108,7 +108,6 @@ If(-NOT (Test-Path $env:SystemDrive\'agent'))
     # Remove previous (template) installation
     "Calling .\config.cmd remove --unattended --auth PAT --token $Token"
     .\config.cmd remove --unattended --auth PAT --token $Token
-    cd $env:SystemDrive\
 }
 
 
