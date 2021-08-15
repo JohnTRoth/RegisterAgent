@@ -52,6 +52,7 @@ If(-NOT (Test-Path $env:SystemDrive\'agent'))
     "Calling .\config.cmd remove --unattended --auth PAT --token $Token"
     .\config.cmd remove --unattended --auth PAT --token $Token
     cd $env:SystemDrive\
+    Start-Sleep -s 15
     Remove-Item $env:SystemDrive\'agent' -force -recurse
     mkdir $env:SystemDrive\'agent'
 }
